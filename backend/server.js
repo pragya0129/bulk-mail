@@ -8,7 +8,7 @@ const xlsx = require("xlsx");
 const nodemailer = require("nodemailer");
 const Email = require("./models/Email");
 const app = express();
-const path = require('path');
+const path = require("path");
 
 // Apply middlewares first
 app.use(bodyParser.json());
@@ -23,13 +23,21 @@ app.use("/api", mailRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Connect to MongoDB
-mongoose
-  .connect(process.env.MONGO_URI, {
+const connectDb = async () => {
+  if (mongoose.connection.readyState >= 1) {
+    return;
+  }
+
+  await mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-  })
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log(err));
+  });
+};
+
+app.use(async (req, res, next) => {
+  await connectDb();
+  next();
+});
 
 // Default route
 app.get("/", (req, res) => res.send("Welcome to CelebrateMate API!"));
@@ -136,7 +144,6 @@ app.post(
       await newEmail.save();
 
       res.status(200).json({ message: "Bulk emails sent successfully!" });
-      
     } catch (error) {
       console.error("Error sending bulk mail:", error);
       res.status(500).json({ error: "Failed to send bulk emails." });

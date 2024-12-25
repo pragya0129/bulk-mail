@@ -12,7 +12,13 @@ const path = require("path");
 
 // Apply middlewares first
 app.use(bodyParser.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://bulk-mail-9fpu.vercel.app/"],
+    methods: ["POST", "GET"],
+    credentials: true,
+  })
+);
 
 // Import and use routes
 const userRoutes = require("./routes/userRoutes");
@@ -160,4 +166,3 @@ app.get("/api/emails", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch emails." });
   }
 });
-

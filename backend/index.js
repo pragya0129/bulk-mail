@@ -42,8 +42,6 @@ const connectDb = async () => {
   isConnected = db.connections[0].readyState;
 };
 
-
-
 app.use(async (req, res, next) => {
   await connectDb();
   next();
@@ -157,5 +155,4 @@ app.get("/api/emails", verifyToken, async (req, res) => {
   }
 });
 
-const PORT = process.env.FRONTEND_URL || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+module.exports = app;

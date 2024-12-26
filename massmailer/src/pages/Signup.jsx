@@ -35,7 +35,7 @@ const Signup = () => {
     console.log("Submitting form data:", formData); // Log the form data for debugging
     try {
       const response = await axios.post(
-        `${import.meta.env.REACT_APP_BACKEND_BASE_URL}/api/signup`, // Backend endpoint
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/signup`, // Backend endpoint
         formData
       );
       console.log("API response:", response.data); // Log the API response

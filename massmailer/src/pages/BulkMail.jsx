@@ -55,7 +55,7 @@ const BulkMail = () => {
 
     try {
       const response = await fetch(
-        `${import.meta.env.REACT_APP_BACKEND_BASE_URL}/send-bulk-mail`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/send-bulk-mail`,
         {
           method: "POST",
           body: formData,

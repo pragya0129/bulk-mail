@@ -40,7 +40,7 @@ const Dashboard = () => {
         const userId = decodedToken.userId;
 
         const response = await axios.get(
-          `${import.meta.env.REACT_APP_BACKEND_BASE_URL}/api/mails/${userId}`,
+          `${process.env.REACT_APP_BACKEND_BASE_URL}/api/mails/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -62,9 +62,7 @@ const Dashboard = () => {
 
     try {
       await axios.delete(
-        `${
-          import.meta.env.REACT_APP_BACKEND_BASE_URL
-        }/api/deleteMail/${mailId}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/deleteMail/${mailId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

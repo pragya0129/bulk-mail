@@ -36,7 +36,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `${import.meta.env.REACT_APP_BACKEND_BASE_URL}/api/login`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/login`,
         formData
       );
 

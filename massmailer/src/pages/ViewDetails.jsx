@@ -18,7 +18,7 @@ const ViewDetails = () => {
     console.log("Logo Path:", logo); // Check the value of logo
     const formattedLogoPath = logo.replace(/\\/g, "/"); // Format path
     console.log("Formatted Logo Path:", formattedLogoPath); // Check the formatted path
-    return `${import.meta.env.REACT_APP_BACKEND_BASE_URL}/${formattedLogoPath}`; // Return the URL
+    return `${process.env.REACT_APP_BACKEND_BASE_URL}/${formattedLogoPath}`; // Return the URL
   };
 
   return (

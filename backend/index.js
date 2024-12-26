@@ -8,9 +8,26 @@ const xlsx = require("xlsx");
 const nodemailer = require("nodemailer");
 const Email = require("./models/Email");
 const app = express();
-const allowedOrigins = ["bulk-mail-9fpu.vercel.app"];
+const allowedOrigins = [
+  "https://bulk-mail-9fpu-evlhncrzw-pragyas-projects-aca8b765.vercel.app",
+];
 // Middleware
 app.use(bodyParser.json());
+
+app.use((req, res, next) => {
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://bulk-mail-9fpu-evlhncrzw-pragyas-projects-aca8b765.vercel.app"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
 app.use(
   cors({
     origin: allowedOrigins,
@@ -18,6 +35,7 @@ app.use(
     credentials: true, // If you're using cookies
   })
 );
+app.options("*", cors()); // Handle preflight requests
 
 // Import and use routes
 const userRoutes = require("./routes/userRoutes");

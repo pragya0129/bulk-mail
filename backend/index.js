@@ -8,33 +8,25 @@ const xlsx = require("xlsx");
 const nodemailer = require("nodemailer");
 const Email = require("./models/Email");
 const app = express();
-const allowedOrigins = [process.env.FRONTEND_URL];
 // Middleware
 app.use(bodyParser.json());
 
-app.use(
-  cors({
-    origin: allowedOrigins,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true, // If you're using cookies
-  })
-);
-
 const corsOptions = {
   origin: function (origin, callback) {
-    // Adjust regex to match subdomains with any dynamic part like 'hr2hdytql'
+    // Adjust regex to match the dynamic frontend domains
     const allowedOriginPattern =
       /^https:\/\/bulk-mail-9fpu-[a-z0-9]+-pragyas-projects-aca8b765\.vercel\.app$/;
     if (!origin || allowedOriginPattern.test(origin)) {
-      callback(null, true);
+      callback(null, true); // Allow the origin
     } else {
       callback(new Error("Not allowed by CORS"));
     }
   },
   methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true,
+  credentials: true, // Required for cookies or Authorization headers
 };
 
+// Apply the CORS middleware globally
 app.use(cors(corsOptions));
 
 // Import and use routes

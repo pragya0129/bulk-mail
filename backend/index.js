@@ -8,10 +8,18 @@ const xlsx = require("xlsx");
 const nodemailer = require("nodemailer");
 const Email = require("./models/Email");
 const app = express();
-
+const allowedOrigins = [
+  "https://bulk-mail-9fpu-ef5mnx7hd-pragyas-projects-aca8b765.vercel.app",
+];
 // Middleware
 app.use(bodyParser.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true, // If you're using cookies
+  })
+);
 
 // Import and use routes
 const userRoutes = require("./routes/userRoutes");

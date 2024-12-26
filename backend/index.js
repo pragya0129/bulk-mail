@@ -20,6 +20,22 @@ app.use(
   })
 );
 
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Adjust regex to match subdomains with any dynamic part like 'hr2hdytql'
+    const allowedOriginPattern =
+      /^https:\/\/bulk-mail-9fpu-[a-z0-9]+-pragyas-projects-aca8b765\.vercel\.app$/;
+    if (!origin || allowedOriginPattern.test(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 // Import and use routes
 const userRoutes = require("./routes/userRoutes");

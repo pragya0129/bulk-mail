@@ -13,9 +13,9 @@ app.use(bodyParser.json());
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Adjust regex to match the dynamic frontend domains
+    // Adjust regex to match both dynamic frontend domains
     const allowedOriginPattern =
-      /^https:\/\/bulk-mail-9fpu-[a-z0-9]+-pragyas-projects-aca8b765\.vercel\.app$/;
+      /^https:\/\/bulk-mail-9fpu(\-[a-z0-9]+)?\.vercel\.app$/;
     if (!origin || allowedOriginPattern.test(origin)) {
       callback(null, true); // Allow the origin
     } else {

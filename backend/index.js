@@ -8,7 +8,7 @@ const xlsx = require("xlsx");
 const nodemailer = require("nodemailer");
 const Email = require("./models/Email");
 const app = express();
-const allowedOrigins = ["https://bulk-mail-9fpu.vercel.app"];
+const allowedOrigins = [process.env.FRONTEND_URL];
 // Middleware
 app.use(bodyParser.json());
 

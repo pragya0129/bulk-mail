@@ -33,7 +33,20 @@ app.use(
     credentials: true, // If you're using cookies
   })
 );
-app.options("*", cors()); // Handle preflight requests
+
+app.options("*", (req, res) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.sendStatus(200);
+});
 
 // Import and use routes
 const userRoutes = require("./routes/userRoutes");

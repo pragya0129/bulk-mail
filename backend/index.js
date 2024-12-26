@@ -8,9 +8,8 @@ const xlsx = require("xlsx");
 const nodemailer = require("nodemailer");
 const Email = require("./models/Email");
 const app = express();
-const path = require("path");
 
-// Apply middlewares first
+// Middleware
 app.use(bodyParser.json());
 app.use(
   cors({
@@ -26,14 +25,12 @@ const mailRoutes = require("./routes/mailRoutes");
 const verifyToken = require("./middleware/auth");
 app.use("/api", userRoutes);
 app.use("/api", mailRoutes);
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Connect to MongoDB
 const connectDb = async () => {
   if (mongoose.connection.readyState >= 1) {
     return;
   }
-
   await mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -48,7 +45,9 @@ app.use(async (req, res, next) => {
 // Default route
 app.get("/", (req, res) => res.send("Welcome to CelebrateMate API!"));
 
-const upload = multer({ dest: "uploads/" });
+// Configure multer for in-memory storage
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 // Email configuration
 const transporter = nodemailer.createTransport({
@@ -62,30 +61,28 @@ const transporter = nodemailer.createTransport({
 app.post(
   "/send-bulk-mail",
   upload.fields([
-    { name: "excelFile", maxCount: 1 }, // Handle the Excel file
-    { name: "logo", maxCount: 1 }, // Handle the logo (optional)
-    { name: "attachments" }, // Handle multiple attachments
+    { name: "excelFile", maxCount: 1 },
+    { name: "logo", maxCount: 1 },
+    { name: "attachments" },
   ]),
   async (req, res) => {
     try {
-      // Access uploaded files
       const userId = req.body.userId;
-      const excelFile = req.files.excelFile?.[0];
-      const logo = req.files.logo?.[0];
+      const excelFileBuffer = req.files.excelFile?.[0]?.buffer;
+      const logoBuffer = req.files.logo?.[0]?.buffer;
       const attachments = req.files.attachments || [];
 
-      if (!excelFile) {
+      if (!excelFileBuffer) {
         return res
           .status(400)
           .json({ error: "Excel file is required for bulk email." });
       }
 
       // Process the Excel file
-      const workbook = xlsx.readFile(excelFile.path);
+      const workbook = xlsx.read(excelFileBuffer, { type: "buffer" });
       const sheetName = workbook.SheetNames[0];
       const sheetData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
-      // Extract email addresses
       const emailAddresses = sheetData.map((row) => row.Email);
 
       if (!emailAddresses || emailAddresses.length === 0) {
@@ -94,42 +91,29 @@ app.post(
           .json({ error: "No email addresses found in the Excel file." });
       }
 
-      // Prepare the HTML body with the logo image embedded
-      let htmlBody = `
-        <html>
-          <body>
-            ${
-              logo
-                ? `<img src="cid:companyLogo" alt="Company Logo" style="width: 15%; height: auto;"/>`
-                : ""
-            }
-            <p>${req.body.body}</p>
-          </body>
-        </html>
-      `;
-
-      // Email sending logic
       const mailPromises = emailAddresses.map((email) => {
         const mailOptions = {
           from: process.env.EMAIL,
           to: email,
           subject: req.body.subject,
-          html: htmlBody, // HTML body with logo embedded
-          attachments: [
-            ...(logo
-              ? [
-                  {
-                    filename: logo.originalname,
-                    path: logo.path,
-                    cid: "companyLogo", // CID reference for embedding
-                  },
-                ]
-              : []),
-            ...attachments.map((file) => ({
-              filename: file.originalname,
-              path: file.path,
-            })),
-          ],
+          html: `
+            <html>
+              <body>
+                ${
+                  logoBuffer
+                    ? `<img src="data:image/png;base64,${logoBuffer.toString(
+                        "base64"
+                      )}" alt="Company Logo" style="width: 15%; height: auto;"/>`
+                    : ""
+                }
+                <p>${req.body.body}</p>
+              </body>
+            </html>
+          `,
+          attachments: attachments.map((file) => ({
+            filename: file.originalname,
+            content: file.buffer,
+          })),
         };
 
         return transporter.sendMail(mailOptions);
@@ -140,13 +124,12 @@ app.post(
       const newEmail = new Email({
         subject: req.body.subject,
         body: req.body.body,
-        logo: logo ? logo.path : null, // Save logo path (or base64 if you prefer)
-        attachments: attachments.map((file) => file.path), // Save attachment paths
+        logo: logoBuffer ? "In-Memory Logo" : null,
+        attachments: attachments.map((file) => file.originalname),
         recipients: emailAddresses,
-        userId: userId, // Use the authenticated user's ID
+        userId: userId,
       });
 
-      // Save to the database
       await newEmail.save();
 
       res.status(200).json({ message: "Bulk emails sent successfully!" });
@@ -157,12 +140,15 @@ app.post(
   }
 );
 
-app.get("/api/emails", async (req, res) => {
+app.get("/api/emails", verifyToken, async (req, res) => {
   try {
-    const emails = await Email.find({ userId: req.user.id }); // Fetch emails for the logged-in user
+    const emails = await Email.find({ userId: req.user.id });
     res.status(200).json(emails);
   } catch (error) {
     console.error("Error fetching emails:", error);
     res.status(500).json({ error: "Failed to fetch emails." });
   }
 });
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

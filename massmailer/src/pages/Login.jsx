@@ -24,6 +24,8 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
+  console.log("Backend URL:", process.env.REACT_APP_BACKEND_BASE_URL);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };

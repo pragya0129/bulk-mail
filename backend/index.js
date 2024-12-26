@@ -11,13 +11,7 @@ const app = express();
 
 // Middleware
 app.use(bodyParser.json());
-app.use(
-  cors({
-    origin: ["https://bulk-mail-9fpu.vercel.app/"],
-    methods: ["POST", "GET"],
-    credentials: true,
-  })
-);
+app.use(cors());
 
 // Import and use routes
 const userRoutes = require("./routes/userRoutes");

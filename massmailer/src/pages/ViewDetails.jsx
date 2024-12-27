@@ -14,12 +14,8 @@ const ViewDetails = () => {
   const { subject, body, logo, attachments, recipients } = state || {};
 
   // Handle logo display
-  const getLogoSrc = () => {
-    console.log("Logo Path:", logo); // Check the value of logo
-    const formattedLogoPath = logo.replace(/\\/g, "/"); // Format path
-    console.log("Formatted Logo Path:", formattedLogoPath); // Check the formatted path
-    return `${process.env.REACT_APP_BACKEND_BASE_URL}/${formattedLogoPath}`; // Return the URL
-  };
+  const base64string = logo[1];
+  const decodedData = Buffer.from(base64string, "base64");
 
   return (
     <Container maxWidth="sm" style={{ marginTop: "2rem" }}>
@@ -52,7 +48,7 @@ const ViewDetails = () => {
             <Box style={{ marginTop: "1rem", color: "#CC564D" }}>
               <Typography variant="h6">Logo</Typography>
               <img
-                src={logo} // Use the URL passed from the dashboard
+                src={`data:image/png;base64,${base64String}`} // Use the URL passed from the dashboard
                 alt="Logo"
                 style={{ maxWidth: "200px", maxHeight: "100px" }}
               />

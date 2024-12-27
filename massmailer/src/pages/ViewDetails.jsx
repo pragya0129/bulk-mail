@@ -40,7 +40,7 @@ const ViewDetails = () => {
           </Typography>
           <Typography variant="body1">{body}</Typography>
 
-          {logo ? (
+          {logo !== null ? (
             <Box style={{ marginTop: "1rem", color: "#CC564D" }}>
               <Typography variant="h6">
                 Logo{" "}
@@ -63,8 +63,6 @@ const ViewDetails = () => {
               </Typography>
             </Box>
           )}
-
-          
 
           {/* Show Attachments if present */}
           {attachments && attachments.length > 0 && (

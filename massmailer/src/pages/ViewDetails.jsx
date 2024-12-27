@@ -48,7 +48,7 @@ const ViewDetails = () => {
             <Box style={{ marginTop: "1rem", color: "#CC564D" }}>
               <Typography variant="h6">Logo</Typography>
               <img
-                src={`data:image/png;base64,${base64String}`} // Use the URL passed from the dashboard
+                src={`data:image/png;base64,${decodedData}`} // Use the URL passed from the dashboard
                 alt="Logo"
                 style={{ maxWidth: "200px", maxHeight: "100px" }}
               />

@@ -14,7 +14,7 @@ const ViewDetails = () => {
   const { subject, body, logo, attachments, recipients } = state || {};
 
   // Handle logo display
-  const base64String = logo[1];
+  const base64String = logo;
   console.log(base64String);
 
   const binaryData = atob(base64String);

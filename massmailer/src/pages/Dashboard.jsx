@@ -84,7 +84,7 @@ const Dashboard = () => {
         state: {
           subject: selectedMail.subject,
           body: selectedMail.body,
-          logo: selectedMail.logo, // Assuming logo is a file or URL
+          logo: selectedMail.logo.toString("base64"), // Assuming logo is a file or URL
           attachments: selectedMail.attachments, // Assuming attachments is an array of files
           recipients: selectedMail.recipients, // Assuming recipients is an array of email addresses
           sentAt: selectedMail.sentAt,

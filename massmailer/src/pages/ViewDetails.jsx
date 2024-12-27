@@ -53,6 +53,19 @@ const ViewDetails = () => {
             </Box>
           )}
 
+          {!logo && (
+            <Box style={{ marginTop: "1rem", color: "#CC564D" }}>
+              <Typography variant="h6">
+                Logo{" "}
+                <img
+                  src="/delete.png" // Use the URL passed from the dashboard
+                  alt="Logo"
+                  style={{ maxWidth: "20px", maxHeight: "20px" }}
+                />
+              </Typography>
+            </Box>
+          )}
+
           {/* Show Attachments if present */}
           {attachments && attachments.length > 0 && (
             <Box style={{ marginTop: "1rem" }}>

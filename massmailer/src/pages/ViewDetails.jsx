@@ -40,7 +40,7 @@ const ViewDetails = () => {
           </Typography>
           <Typography variant="body1">{body}</Typography>
 
-          {logo && (
+          {logo ? (
             <Box style={{ marginTop: "1rem", color: "#CC564D" }}>
               <Typography variant="h6">
                 Logo{" "}
@@ -51,20 +51,20 @@ const ViewDetails = () => {
                 />
               </Typography>
             </Box>
-          )}
-
-          {!logo && (
+          ) : (
             <Box style={{ marginTop: "1rem", color: "#CC564D" }}>
               <Typography variant="h6">
                 Logo{" "}
                 <img
-                  src="/delete.png" // Use the URL passed from the dashboard
-                  alt="Logo"
+                  src="/delete.png" // Fallback image if logo is not available
+                  alt="Default Logo"
                   style={{ maxWidth: "20px", maxHeight: "20px" }}
                 />
               </Typography>
             </Box>
           )}
+
+          
 
           {/* Show Attachments if present */}
           {attachments && attachments.length > 0 && (

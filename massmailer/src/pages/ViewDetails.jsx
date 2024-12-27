@@ -15,6 +15,8 @@ const ViewDetails = () => {
 
   // Handle logo display
   const base64String = logo[1];
+  console.log(base64String);
+
   const binaryData = atob(base64String);
 
   // Create a Uint8Array to hold the binary data

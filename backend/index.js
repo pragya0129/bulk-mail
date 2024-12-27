@@ -26,6 +26,16 @@ const corsOptions = {
   credentials: true, // Required for cookies or Authorization headers
 };
 
+app.use((req, res, next) => {
+  res.setHeader("Cache-Control", "no-store");
+  next();
+});
+
+app.use((req, res, next) => {
+  console.log("Origin:", req.headers.origin);
+  next();
+});
+
 // Apply the CORS middleware globally
 app.use(cors(corsOptions));
 

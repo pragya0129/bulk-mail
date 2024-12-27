@@ -14,8 +14,20 @@ const ViewDetails = () => {
   const { subject, body, logo, attachments, recipients } = state || {};
 
   // Handle logo display
-  const base64string = logo[1];
-  const decodedData = Buffer.from(base64string, "base64");
+  const base64String = logo[1];
+  const binaryData = atob(base64String);
+
+  // Create a Uint8Array to hold the binary data
+  const arrayBuffer = new ArrayBuffer(binaryData.length);
+  const uint8Array = new Uint8Array(arrayBuffer);
+
+  for (let i = 0; i < binaryData.length; i++) {
+    uint8Array[i] = binaryData.charCodeAt(i);
+  }
+
+  // Create a Blob and display it as an image
+  const blob = new Blob([uint8Array], { type: "image/png" }); // Use the appropriate MIME type
+  const imageUrl = URL.createObjectURL(blob);
 
   return (
     <Container maxWidth="sm" style={{ marginTop: "2rem" }}>
@@ -48,7 +60,7 @@ const ViewDetails = () => {
             <Box style={{ marginTop: "1rem", color: "#CC564D" }}>
               <Typography variant="h6">Logo</Typography>
               <img
-                src={`data:image/png;base64,${decodedData}`} // Use the URL passed from the dashboard
+                src={imageUrl} // Use the URL passed from the dashboard
                 alt="Logo"
                 style={{ maxWidth: "200px", maxHeight: "100px" }}
               />

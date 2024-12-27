@@ -48,12 +48,11 @@ const ViewDetails = () => {
           </Typography>
           <Typography variant="body1">{body}</Typography>
 
-          {/* Show Logo if present */}
           {logo && (
             <Box style={{ marginTop: "1rem", color: "#CC564D" }}>
               <Typography variant="h6">Logo</Typography>
               <img
-                src={getLogoSrc()} // Use the function to get the correct logo source
+                src={logo} // Use the URL passed from the dashboard
                 alt="Logo"
                 style={{ maxWidth: "200px", maxHeight: "100px" }}
               />

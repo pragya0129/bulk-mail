@@ -47,7 +47,7 @@ const ViewDetails = () => {
                 <img
                   src="/check.png" // Use the URL passed from the dashboard
                   alt="Logo"
-                  style={{ maxWidth: "200px", maxHeight: "100px" }}
+                  style={{ maxWidth: "20px", maxHeight: "20px" }}
                 />
               </Typography>
             </Box>

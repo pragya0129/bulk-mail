@@ -87,6 +87,7 @@ const Dashboard = () => {
           logo: selectedMail.logo, // Assuming logo is a file or URL
           attachments: selectedMail.attachments, // Assuming attachments is an array of files
           recipients: selectedMail.recipients, // Assuming recipients is an array of email addresses
+          sentAt: selectedMail.sentAt,
         },
       });
     }
@@ -153,7 +154,10 @@ const Dashboard = () => {
                         <EmailIcon color="" />
                       </Avatar>
                     </ListItemAvatar>
-                    <ListItemText primary={mail.subject} />
+                    <ListItemText
+                      primary={mail.subject}
+                      secondary={mail.sentAt}
+                    />
                     <Box>
                       <Button
                         variant="outlined"

@@ -13,24 +13,6 @@ const ViewDetails = () => {
   const { state } = useLocation();
   const { subject, body, logo, attachments, recipients } = state || {};
 
-  // Handle logo display
-  const base64String = logo;
-  console.log(logo);
-
-  const binaryData = atob(base64String);
-
-  // Create a Uint8Array to hold the binary data
-  const arrayBuffer = new ArrayBuffer(binaryData.length);
-  const uint8Array = new Uint8Array(arrayBuffer);
-
-  for (let i = 0; i < binaryData.length; i++) {
-    uint8Array[i] = binaryData.charCodeAt(i);
-  }
-
-  // Create a Blob and display it as an image
-  const blob = new Blob([uint8Array], { type: "image/png" }); // Use the appropriate MIME type
-  const imageUrl = URL.createObjectURL(blob);
-
   return (
     <Container maxWidth="sm" style={{ marginTop: "2rem" }}>
       <Paper
@@ -62,7 +44,7 @@ const ViewDetails = () => {
             <Box style={{ marginTop: "1rem", color: "#CC564D" }}>
               <Typography variant="h6">Logo</Typography>
               <img
-                src={imageUrl} // Use the URL passed from the dashboard
+                src={logo} // Use the URL passed from the dashboard
                 alt="Logo"
                 style={{ maxWidth: "200px", maxHeight: "100px" }}
               />

@@ -80,11 +80,12 @@ const Dashboard = () => {
     // Find the mail from the state and pass it to the ViewDetails page
     const selectedMail = mails.find((mail) => mail._id === mailId);
     if (selectedMail) {
+      const logoBase64 = selectedMail.logo.buffer.toString("base64");
       navigate("/viewdetails", {
         state: {
           subject: selectedMail.subject,
           body: selectedMail.body,
-          logo: selectedMail.logo.toString("base64"), // Assuming logo is a file or URL
+          logo: `data:image/png;base64,${logoBase64}`, // Assuming logo is a file or URL
           attachments: selectedMail.attachments, // Assuming attachments is an array of files
           recipients: selectedMail.recipients, // Assuming recipients is an array of email addresses
           sentAt: selectedMail.sentAt,

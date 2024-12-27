@@ -117,6 +117,19 @@ app.post(
       }
 
       const mailPromises = emailAddresses.map((email) => {
+        const attachmentsArray = attachments.map((file) => ({
+          filename: file.originalname,
+          content: file.buffer,
+        }));
+
+        if (logoBuffer) {
+          attachmentsArray.push({
+            filename: "logo.png", // Name of the logo file
+            content: logoBuffer,
+            cid: "companyLogo", // Content-ID for referencing in the email
+          });
+        }
+
         const mailOptions = {
           from: process.env.EMAIL,
           to: email,
@@ -126,19 +139,14 @@ app.post(
               <body>
                 ${
                   logoBuffer
-                    ? `<img src="data:image/png;base64,${logoBuffer.toString(
-                        "base64"
-                      )}" alt="Company Logo" style="width: 15%; height: auto;"/>`
+                    ? `<img src="cid:companyLogo" alt="Company Logo" style="width: 15%; height: auto;"/>`
                     : ""
                 }
                 <p>${req.body.body}</p>
               </body>
             </html>
           `,
-          attachments: attachments.map((file) => ({
-            filename: file.originalname,
-            content: file.buffer,
-          })),
+          attachments: attachmentsArray,
         };
 
         return transporter.sendMail(mailOptions);

@@ -13,28 +13,20 @@ app.use(bodyParser.json());
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Adjust regex to match both dynamic frontend domains
-    const allowedOriginPattern =
-      /^https:\/\/bulk-mail-9fpu(\-[a-z0-9]+)?\.vercel\.app$/;
-    if (!origin || allowedOriginPattern.test(origin)) {
-      callback(null, true); // Allow the origin
+    const allowedOrigins = [
+      "https://bulk-mail-9fpu.vercel.app", // Your frontend domain
+      "https://bulk-mail-nu.vercel.app", // Backend domain
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
     } else {
+      console.error("Blocked by CORS:", origin);
       callback(new Error("Not allowed by CORS"));
     }
   },
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true, // Required for cookies or Authorization headers
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Include OPTIONS
+  credentials: true, // Allow cookies or Authorization headers
 };
-
-app.use((req, res, next) => {
-  res.setHeader("Cache-Control", "no-store");
-  next();
-});
-
-app.use((req, res, next) => {
-  console.log("Origin:", req.headers.origin);
-  next();
-});
 
 // Apply the CORS middleware globally
 app.use(cors(corsOptions));

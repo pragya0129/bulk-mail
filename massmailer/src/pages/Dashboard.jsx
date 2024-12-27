@@ -77,20 +77,30 @@ const Dashboard = () => {
   };
 
   const handleViewDetails = (mailId) => {
-    // Find the mail from the state and pass it to the ViewDetails page
     const selectedMail = mails.find((mail) => mail._id === mailId);
+
+    console.log(selectedMail.logo);
+
     if (selectedMail) {
-      const logoBase64 = selectedMail.logo.buffer.toString("base64");
+      let logoBase64 = null;
+
+      if (selectedMail.logo && selectedMail.logo.buffer) {
+        // Safely convert binary data to Base64
+        logoBase64 = selectedMail.logo.buffer.toString("base64");
+      }
+
       navigate("/viewdetails", {
         state: {
           subject: selectedMail.subject,
           body: selectedMail.body,
-          logo: `data:image/png;base64,${logoBase64}`, // Assuming logo is a file or URL
-          attachments: selectedMail.attachments, // Assuming attachments is an array of files
-          recipients: selectedMail.recipients, // Assuming recipients is an array of email addresses
+          logo: logoBase64 ? `data:image/png;base64,${logoBase64}` : null, // Add MIME type if data exists
+          attachments: selectedMail.attachments,
+          recipients: selectedMail.recipients,
           sentAt: selectedMail.sentAt,
         },
       });
+    } else {
+      console.error("Selected mail not found.");
     }
   };
 

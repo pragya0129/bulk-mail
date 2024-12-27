@@ -88,8 +88,8 @@ const Dashboard = () => {
         selectedMail.logo.data
       ) {
         // Convert the data array to a Base64 string
-        const buffer = Buffer.from(selectedMail.logo.data); // Use Node.js Buffer
-        logoBase64 = buffer.toString("base64");
+        const binary = String.fromCharCode(...selectedMail.logo.data);
+        logoBase64 = btoa(binary); // Convert binary string to Base64
       }
 
       navigate("/viewdetails", {

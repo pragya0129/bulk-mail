@@ -38,6 +38,7 @@ app.use((req, res, next) => {
 
 // Apply the CORS middleware globally
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // Preflight requests
 
 // Import and use routes
 const userRoutes = require("./routes/userRoutes");

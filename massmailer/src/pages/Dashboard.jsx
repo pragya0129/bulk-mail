@@ -79,21 +79,24 @@ const Dashboard = () => {
   const handleViewDetails = (mailId) => {
     const selectedMail = mails.find((mail) => mail._id === mailId);
 
-    console.log(selectedMail.logo);
-
     if (selectedMail) {
       let logoBase64 = null;
 
-      if (selectedMail.logo && selectedMail.logo.buffer) {
-        // Safely convert binary data to Base64
-        logoBase64 = selectedMail.logo.buffer.toString("base64");
+      if (
+        selectedMail.logo &&
+        selectedMail.logo.type === "Buffer" &&
+        selectedMail.logo.data
+      ) {
+        // Convert the data array to a Base64 string
+        const buffer = Buffer.from(selectedMail.logo.data); // Use Node.js Buffer
+        logoBase64 = buffer.toString("base64");
       }
 
       navigate("/viewdetails", {
         state: {
           subject: selectedMail.subject,
           body: selectedMail.body,
-          logo: logoBase64 ? `data:image/png;base64,${logoBase64}` : null, // Add MIME type if data exists
+          logo: logoBase64 ? `data:image/png;base64,${logoBase64}` : null, // Add MIME type
           attachments: selectedMail.attachments,
           recipients: selectedMail.recipients,
           sentAt: selectedMail.sentAt,

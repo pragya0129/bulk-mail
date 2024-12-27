@@ -42,12 +42,14 @@ const ViewDetails = () => {
 
           {logo && (
             <Box style={{ marginTop: "1rem", color: "#CC564D" }}>
-              <Typography variant="h6">Logo</Typography>
-              <img
-                src={logo} // Use the URL passed from the dashboard
-                alt="Logo"
-                style={{ maxWidth: "200px", maxHeight: "100px" }}
-              />
+              <Typography variant="h6">
+                Logo{" "}
+                <img
+                  src="/check.png" // Use the URL passed from the dashboard
+                  alt="Logo"
+                  style={{ maxWidth: "200px", maxHeight: "100px" }}
+                />
+              </Typography>
             </Box>
           )}
 

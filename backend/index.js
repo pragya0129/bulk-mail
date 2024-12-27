@@ -12,21 +12,11 @@ const app = express();
 app.use(bodyParser.json());
 
 const corsOptions = {
-  origin: function (origin, callback) {
-    const allowedOrigins = [
-      "https://bulk-mail-9fpu.vercel.app", // Frontend domain
-      "https://bulk-mail-nu.vercel.app", // Backend domain
-    ];
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true); // Allow the origin
-    } else {
-      console.error("Blocked by CORS:", origin);
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: true, // Allow all origins
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Include OPTIONS for preflight
   credentials: true, // Allow credentials (cookies, headers)
 };
+
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions)); // Handle preflight requests
 

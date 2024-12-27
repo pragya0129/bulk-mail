@@ -12,13 +12,33 @@ const app = express();
 app.use(bodyParser.json());
 
 const corsOptions = {
-  origin: true, // Allow all origins
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Include OPTIONS for preflight
-  credentials: true, // Allow credentials (cookies, headers)
+  origin: function (origin, callback) {
+    // Adjust regex to match both dynamic frontend domains
+    const allowedOriginPattern =
+      /^https:\/\/bulk-mail-9fpu(\-[a-z0-9]+)?\.vercel\.app$/;
+    if (!origin || allowedOriginPattern.test(origin)) {
+      callback(null, true); // Allow the origin
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true, // Required for cookies or Authorization headers
 };
 
+app.use((req, res, next) => {
+  res.setHeader("Cache-Control", "no-store");
+  next();
+});
+
+app.use((req, res, next) => {
+  console.log("Origin:", req.headers.origin);
+  next();
+});
+
+// Apply the CORS middleware globally
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // Handle preflight requests
+app.options("*", cors(corsOptions)); // Preflight requests
 
 // Import and use routes
 const userRoutes = require("./routes/userRoutes");
@@ -164,7 +184,7 @@ app.get("/api/emails", verifyToken, async (req, res) => {
   }
 });
 
-router.get("/email/logo/:emailId", async (req, res) => {
+app.get("/email/logo/:emailId", async (req, res) => {
   try {
     const email = await Email.findById(req.params.emailId);
     if (!email || !email.logo) {

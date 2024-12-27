@@ -184,19 +184,6 @@ app.get("/api/emails", verifyToken, async (req, res) => {
   }
 });
 
-app.get("/email/logo/:emailId", async (req, res) => {
-  try {
-    const email = await Email.findById(req.params.emailId);
-    if (!email || !email.logo) {
-      return res.status(404).json({ error: "Logo not found" });
-    }
 
-    res.set("Content-Type", "image/png"); // Adjust based on the stored format
-    res.send(email.logo);
-  } catch (error) {
-    console.error("Error fetching logo:", error);
-    res.status(500).json({ error: "Failed to fetch logo" });
-  }
-});
 
 module.exports = app;

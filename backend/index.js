@@ -11,6 +11,24 @@ const app = express();
 // Middleware
 app.use(bodyParser.json());
 
+const allowCors = (fn) => async (req, res) => {
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,OPTIONS,PATCH,DELETE,POST,PUT"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+  );
+  if (req.method === "OPTIONS") {
+    res.status(200).end();
+    return;
+  }
+  return await fn(req, res);
+};
+
 const corsOptions = {
   origin: function (origin, callback) {
     // Adjust regex to match both dynamic frontend domains
@@ -44,8 +62,8 @@ app.options("*", cors(corsOptions)); // Preflight requests
 const userRoutes = require("./routes/userRoutes");
 const mailRoutes = require("./routes/mailRoutes");
 const verifyToken = require("./middleware/auth");
-app.use("/api", userRoutes);
-app.use("/api", mailRoutes);
+app.use("/api", allowCors(userRoutes));
+app.use("/api", allowCors(mailRoutes));
 
 let isConnected;
 
@@ -183,7 +201,5 @@ app.get("/api/emails", verifyToken, async (req, res) => {
     res.status(500).json({ error: "Failed to fetch emails." });
   }
 });
-
-
 
 module.exports = app;

@@ -63,7 +63,7 @@ const userRoutes = require("./routes/userRoutes");
 const mailRoutes = require("./routes/mailRoutes");
 const verifyToken = require("./middleware/auth");
 app.use("/api", allowCors(userRoutes));
-app.use("/api", allowCors(mailRoutes));
+app.use("/api", mailRoutes);
 
 let isConnected;
 

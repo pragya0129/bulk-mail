@@ -1,74 +1,34 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const mongoose = require("mongoose");
 require("dotenv").config();
 const multer = require("multer");
 const xlsx = require("xlsx");
 const nodemailer = require("nodemailer");
-const Email = require("./models/Email");
+const axios = require("axios");
+
 const app = express();
+
 // Middleware
 app.use(bodyParser.json());
 
-
-
+// CORS configuration
 const corsOptions = {
   origin: function (origin, callback) {
-    // Adjust regex to match both dynamic frontend domains
     const allowedOriginPattern =
       /^https:\/\/bulk-mail-9fpu(\-[a-z0-9]+)?\.vercel\.app$/;
     if (!origin || allowedOriginPattern.test(origin)) {
-      callback(null, true); // Allow the origin
+      callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
     }
   },
   methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true, // Required for cookies or Authorization headers
+  credentials: true,
 };
 
-app.use((req, res, next) => {
-  res.setHeader("Cache-Control", "no-store");
-  next();
-});
-
-app.use((req, res, next) => {
-  console.log("Origin:", req.headers.origin);
-  next();
-});
-
-// Apply the CORS middleware globally
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // Preflight requests
-
-// Import and use routes
-const userRoutes = require("./routes/userRoutes");
-const mailRoutes = require("./routes/mailRoutes");
-const verifyToken = require("./middleware/auth");
-app.use("/api", userRoutes);
-app.use("/api", mailRoutes);
-
-let isConnected;
-
-const connectDb = async () => {
-  if (isConnected) {
-    console.log("Using existing database connection");
-    return;
-  }
-
-  console.log("Creating new database connection");
-  const db = await mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    // Remove useUnifiedTopology as it is no longer necessary
-  });
-  isConnected = db.connections[0].readyState;
-};
-
-app.use(async (req, res, next) => {
-  await connectDb();
-  next();
-});
+app.options("*", cors(corsOptions));
 
 // Default route
 app.get("/", (req, res) => res.send("Welcome to CelebrateMate API!"));
@@ -79,13 +39,76 @@ const upload = multer({ storage });
 
 // Email configuration
 const transporter = nodemailer.createTransport({
-  service: "Gmail", // Or use your email service provider
+  service: "Gmail",
   auth: {
-    user: process.env.EMAIL, // Replace with your email
-    pass: process.env.EMAIL_PASSWORD, // Replace with your email password or app-specific password
+    user: process.env.EMAIL,
+    pass: process.env.EMAIL_PASSWORD,
   },
 });
 
+// MongoDB Data API Base URL and Bearer Token
+const MONGODB_API_URL = process.env.MONGODB_API_URL;
+const MONGODB_API_KEY = process.env.MONGODB_API_KEY;
+
+// Helper function to interact with MongoDB Data API
+const mongodbRequest = async (action, body) => {
+  try {
+    const response = await axios.post(
+      `${MONGODB_API_URL}/action/${action}`,
+      body,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${MONGODB_API_KEY}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("MongoDB Data API Error:", error.response?.data || error);
+    throw new Error("Database operation failed");
+  }
+};
+
+// Example route to fetch emails
+app.get("/api/emails", async (req, res) => {
+  try {
+    const query = {
+      dataSource: "Cluster0",
+      database: "CelebrateMate",
+      collection: "emails",
+      filter: { userId: req.query.userId },
+    };
+
+    const result = await mongodbRequest("find", query);
+    res.status(200).json(result.documents);
+  } catch (error) {
+    console.error("Error fetching emails:", error);
+    res.status(500).json({ error: "Failed to fetch emails." });
+  }
+});
+
+// Example route to insert an email record
+app.post("/api/emails", async (req, res) => {
+  try {
+    const emailData = req.body;
+
+    const query = {
+      dataSource: "Cluster0",
+      database: "CelebrateMate",
+      collection: "emails",
+      document: emailData,
+    };
+
+    await mongodbRequest("insertOne", query);
+    res.status(201).json({ message: "Email record created successfully!" });
+  } catch (error) {
+    console.error("Error inserting email:", error);
+    res.status(500).json({ error: "Failed to create email record." });
+  }
+});
+
+// Bulk email sending route
 app.post(
   "/send-bulk-mail",
   upload.fields([
@@ -95,7 +118,6 @@ app.post(
   ]),
   async (req, res) => {
     try {
-      const userId = req.body.userId;
       const excelFileBuffer = req.files.excelFile?.[0]?.buffer;
       const logoBuffer = req.files.logo?.[0]?.buffer;
       const attachments = req.files.attachments || [];
@@ -106,7 +128,6 @@ app.post(
           .json({ error: "Excel file is required for bulk email." });
       }
 
-      // Process the Excel file
       const workbook = xlsx.read(excelFileBuffer, { type: "buffer" });
       const sheetName = workbook.SheetNames[0];
       const sheetData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
@@ -127,9 +148,9 @@ app.post(
 
         if (logoBuffer) {
           attachmentsArray.push({
-            filename: "logo.png", // Name of the logo file
+            filename: "logo.png",
             content: logoBuffer,
-            cid: "companyLogo", // Content-ID for referencing in the email
+            cid: "companyLogo",
           });
         }
 
@@ -157,16 +178,22 @@ app.post(
 
       await Promise.all(mailPromises);
 
-      const newEmail = new Email({
+      const emailRecord = {
         subject: req.body.subject,
         body: req.body.body,
         logo: logoBuffer ? "In-Memory Logo" : null,
         attachments: attachments.map((file) => file.originalname),
         recipients: emailAddresses,
-        userId: userId,
-      });
+      };
 
-      await newEmail.save();
+      const query = {
+        dataSource: "Cluster0",
+        database: "CelebrateMate",
+        collection: "emails",
+        document: emailRecord,
+      };
+
+      await mongodbRequest("insertOne", query);
 
       res.status(200).json({ message: "Bulk emails sent successfully!" });
     } catch (error) {
@@ -175,17 +202,5 @@ app.post(
     }
   }
 );
-
-app.get("/api/emails", verifyToken, async (req, res) => {
-  try {
-    const emails = await Email.find({ userId: req.user.id });
-    res.status(200).json(emails);
-  } catch (error) {
-    console.error("Error fetching emails:", error);
-    res.status(500).json({ error: "Failed to fetch emails." });
-  }
-});
-
-
 
 module.exports = app;

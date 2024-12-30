@@ -178,6 +178,7 @@ const Login = () => {
                       left: "50%",
                       marginTop: "-12px",
                       marginLeft: "-12px",
+                      color: "teal",
                     }}
                   />
                 ) : (

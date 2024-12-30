@@ -8,48 +8,40 @@ const xlsx = require("xlsx");
 const nodemailer = require("nodemailer");
 const Email = require("./models/Email");
 const app = express();
+
 // Middleware
 app.use(bodyParser.json());
 
-
+// Enhanced CORS Configuration
+const allowedOrigins = [
+  "https://bulk-mail-nu.vercel.app",
+  "https://bulk-mail-9fpu.vercel.app",
+];
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Adjust regex to match both dynamic frontend domains
-    const allowedOriginPattern =
-      /^https:\/\/bulk-mail-9fpu(\-[a-z0-9]+)?\.vercel\.app$/;
-    if (!origin || allowedOriginPattern.test(origin)) {
-      callback(null, true); // Allow the origin
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
     }
   },
   methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true, // Required for cookies or Authorization headers
+  credentials: true,
 };
 
-app.use((req, res, next) => {
-  res.setHeader("Cache-Control", "no-store");
-  next();
-});
-
-app.use((req, res, next) => {
-  console.log("Origin:", req.headers.origin);
-  next();
-});
-
-// Apply the CORS middleware globally
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // Preflight requests
+app.options("*", cors(corsOptions)); // Handle preflight requests
 
-// Import and use routes
-const userRoutes = require("./routes/userRoutes");
-const mailRoutes = require("./routes/mailRoutes");
-const verifyToken = require("./middleware/auth");
-app.use("/api", userRoutes);
-app.use("/api", mailRoutes);
+// Debugging Middleware
+app.use((req, res, next) => {
+  console.log("Request Origin:", req.headers.origin);
+  console.log("Request Method:", req.method);
+  next();
+});
 
-let isConnected;
+// Database Connection
+let isConnected = false;
 
 const connectDb = async () => {
   if (isConnected) {
@@ -60,15 +52,29 @@ const connectDb = async () => {
   console.log("Creating new database connection");
   const db = await mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
-    // Remove useUnifiedTopology as it is no longer necessary
+    useUnifiedTopology: true,
   });
   isConnected = db.connections[0].readyState;
 };
 
+// Ensure DB connection before processing any request
 app.use(async (req, res, next) => {
-  await connectDb();
-  next();
+  try {
+    await connectDb();
+    next();
+  } catch (error) {
+    console.error("Database connection error:", error);
+    res.status(500).json({ error: "Database connection failed" });
+  }
 });
+
+// Routes
+const userRoutes = require("./routes/userRoutes");
+const mailRoutes = require("./routes/mailRoutes");
+const verifyToken = require("./middleware/auth");
+
+app.use("/api", userRoutes);
+app.use("/api", mailRoutes);
 
 // Default route
 app.get("/", (req, res) => res.send("Welcome to CelebrateMate API!"));
@@ -79,13 +85,14 @@ const upload = multer({ storage });
 
 // Email configuration
 const transporter = nodemailer.createTransport({
-  service: "Gmail", // Or use your email service provider
+  service: "Gmail",
   auth: {
-    user: process.env.EMAIL, // Replace with your email
-    pass: process.env.EMAIL_PASSWORD, // Replace with your email password or app-specific password
+    user: process.env.EMAIL,
+    pass: process.env.EMAIL_PASSWORD,
   },
 });
 
+// Bulk Mail Route
 app.post(
   "/send-bulk-mail",
   upload.fields([
@@ -95,28 +102,22 @@ app.post(
   ]),
   async (req, res) => {
     try {
-      const userId = req.body.userId;
+      const { userId, subject, body } = req.body;
       const excelFileBuffer = req.files.excelFile?.[0]?.buffer;
       const logoBuffer = req.files.logo?.[0]?.buffer;
       const attachments = req.files.attachments || [];
 
       if (!excelFileBuffer) {
-        return res
-          .status(400)
-          .json({ error: "Excel file is required for bulk email." });
+        return res.status(400).json({ error: "Excel file is required." });
       }
 
-      // Process the Excel file
       const workbook = xlsx.read(excelFileBuffer, { type: "buffer" });
       const sheetName = workbook.SheetNames[0];
       const sheetData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
       const emailAddresses = sheetData.map((row) => row.Email);
-
       if (!emailAddresses || emailAddresses.length === 0) {
-        return res
-          .status(400)
-          .json({ error: "No email addresses found in the Excel file." });
+        return res.status(400).json({ error: "No email addresses found." });
       }
 
       const mailPromises = emailAddresses.map((email) => {
@@ -127,25 +128,25 @@ app.post(
 
         if (logoBuffer) {
           attachmentsArray.push({
-            filename: "logo.png", // Name of the logo file
+            filename: "logo.png",
             content: logoBuffer,
-            cid: "companyLogo", // Content-ID for referencing in the email
+            cid: "companyLogo",
           });
         }
 
         const mailOptions = {
           from: process.env.EMAIL,
           to: email,
-          subject: req.body.subject,
+          subject,
           html: `
             <html>
               <body>
                 ${
                   logoBuffer
-                    ? `<img src="cid:companyLogo" alt="Company Logo" style="width: 15%; height: auto;"/>`
+                    ? `<img src="cid:companyLogo" alt="Logo" style="width: 15%;"/>`
                     : ""
                 }
-                <p>${req.body.body}</p>
+                <p>${body}</p>
               </body>
             </html>
           `,
@@ -158,12 +159,12 @@ app.post(
       await Promise.all(mailPromises);
 
       const newEmail = new Email({
-        subject: req.body.subject,
-        body: req.body.body,
+        subject,
+        body,
         logo: logoBuffer ? "In-Memory Logo" : null,
         attachments: attachments.map((file) => file.originalname),
         recipients: emailAddresses,
-        userId: userId,
+        userId,
       });
 
       await newEmail.save();
@@ -176,6 +177,7 @@ app.post(
   }
 );
 
+// Fetch Emails Route
 app.get("/api/emails", verifyToken, async (req, res) => {
   try {
     const emails = await Email.find({ userId: req.user.id });
@@ -185,7 +187,5 @@ app.get("/api/emails", verifyToken, async (req, res) => {
     res.status(500).json({ error: "Failed to fetch emails." });
   }
 });
-
-
 
 module.exports = app;

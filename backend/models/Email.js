@@ -10,7 +10,7 @@ const emailSchema = new mongoose.Schema({
     type: String,
     default: () => {
       const now = new Date();
-      return now.toISOString().slice(0, 19).replace("T", " "); // Format: 'YYYY-MM-DD HH:mm:ss'
+      return now.toISOString().slice(0, 10); // Format: 'YYYY-MM-DD'
     },
   }, // Timestamp of when the email was sent
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // Reference to the user

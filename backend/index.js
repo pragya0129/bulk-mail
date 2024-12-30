@@ -77,7 +77,7 @@ app.use("/api", userRoutes);
 app.use("/api", mailRoutes);
 
 // Default route
-app.get("/", (req, res) => res.send("Welcome to CelebrateMate API!"));
+app.get("/", (req, res) => res.send("Welcome to MassMailer!"));
 
 // Configure multer for in-memory storage
 const storage = multer.memoryStorage();

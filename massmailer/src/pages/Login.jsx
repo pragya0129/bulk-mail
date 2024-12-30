@@ -7,6 +7,7 @@ import {
   Button,
   Box,
   Paper,
+  CircularProgress,
 } from "@mui/material";
 import { useMediaQuery } from "@mui/material";
 import axios from "axios";
@@ -22,6 +23,7 @@ const Login = () => {
     password: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   console.log("Backend URL:", process.env.REACT_APP_BACKEND_BASE_URL);
@@ -36,6 +38,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_BACKEND_BASE_URL}/api/login`,
@@ -48,7 +51,6 @@ const Login = () => {
       if (token) {
         localStorage.setItem("authToken", token); // Store the token in localStorage
         console.log("Token stored in localStorage"); // Log successful storage
-        alert("Login successful!");
         navigate("/dashboard"); // Redirect to the dashboard after login
       } else {
         setErrorMessage("Login failed! No token received.");
@@ -59,6 +61,8 @@ const Login = () => {
           "Login failed! Please check your credentials."
       );
       console.error("Login error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -164,14 +168,29 @@ const Login = () => {
                   },
                 }}
               />
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                style={{ marginTop: "1rem", background: "#008080" }}
-              >
-                Login
-              </Button>
+              <Box sx={{ position: "relative", marginTop: "1rem" }}>
+                {loading ? (
+                  <CircularProgress
+                    size={24}
+                    sx={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      marginTop: "-12px",
+                      marginLeft: "-12px",
+                    }}
+                  />
+                ) : (
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    fullWidth
+                    style={{ background: "#008080" }}
+                  >
+                    Login
+                  </Button>
+                )}
+              </Box>
               <Button
                 variant="outlined"
                 fullWidth

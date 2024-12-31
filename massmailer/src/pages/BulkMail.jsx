@@ -52,7 +52,7 @@ const BulkMail = () => {
     attachments.forEach((file) => formData.append("attachments", file));
     formData.append("excelFile", excelFile);
     formData.append("userId", userID);
-    formData.append("footer", footer);
+    formData.append("footer", JSON.stringify(footer));
 
     try {
       const response = await fetch(

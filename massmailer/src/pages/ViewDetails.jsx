@@ -158,7 +158,14 @@ const ViewDetails = () => {
             </Box>
           ) : (
             <Box style={{ marginTop: "1rem", color: "#CC564D" }}>
-              <Typography variant="h6">
+              <Typography
+                variant="h6"
+                sx={{
+                  border: "1px solid rgb(152, 152, 152)", // Border color
+                  borderRadius: "4px", // Rounded corners
+                  padding: "4px 8px",
+                }}
+              >
                 <span
                   style={{
                     fontSize: "10px", // Smaller font size
@@ -182,7 +189,13 @@ const ViewDetails = () => {
           {/* Show Attachments if present */}
           {attachments && attachments.length > 0 && (
             <Box style={{ marginTop: "1rem" }}>
-              <Typography>
+              <Typography
+                sx={{
+                  border: "1px solid rgb(152, 152, 152)", // Border color
+                  borderRadius: "4px", // Rounded corners
+                  padding: "4px 8px",
+                }}
+              >
                 <span
                   style={{
                     fontSize: "10px", // Smaller font size
@@ -210,7 +223,15 @@ const ViewDetails = () => {
           {/* Show Recipients */}
           {recipients && recipients.length > 0 && (
             <Box style={{ marginTop: "1rem" }}>
-              <Typography variant="h6" sx={{ color: "#CC564D" }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  color: "#CC564D",
+                  border: "1px solid rgb(152, 152, 152)", // Border color
+                  borderRadius: "4px", // Rounded corners
+                  padding: "4px 8px",
+                }}
+              >
                 <span
                   style={{
                     fontSize: "10px", // Smaller font size

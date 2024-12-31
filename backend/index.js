@@ -104,12 +104,18 @@ app.post(
     try {
       const { userId, subject, body, footer } = req.body;
 
-      const footerobj = JSON.parse(footer);
-      const footerData = {
-        name: footerobj?.name || "",
-        designation: footerobj?.designation || "",
-        contact: footerobj?.contact || "",
-      };
+      let footerData = { name: "", designation: "", contact: "" };
+      try {
+        const footerObj = footer ? JSON.parse(footer) : {};
+        footerData = {
+          name: footerObj.name || "",
+          designation: footerObj.designation || "",
+          contact: footerObj.contact || "",
+        };
+      } catch (error) {
+        console.error("Error parsing footer:", error);
+        return res.status(400).json({ error: "Invalid footer data." });
+      }
       const excelFileBuffer = req.files.excelFile?.[0]?.buffer;
       const logoBuffer = req.files.logo?.[0]?.buffer;
       const attachments = req.files.attachments || [];

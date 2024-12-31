@@ -77,11 +77,16 @@ const ViewDetails = () => {
             >
               Body
             </span>{" "}
+            {logo ? (
+              <img src="https://placehold.co/100?text=Your+Logo" alt="Logo" />
+            ) : (
+              <></>
+            )}
             {body}
             <hr></hr>
             {/* Footer */}
             {footer && (
-              <Box style={{ marginTop: "1rem" }}>
+              <Box style={{ marginTop: "0.5rem" }}>
                 <Typography variant="body1">
                   <span
                     style={{

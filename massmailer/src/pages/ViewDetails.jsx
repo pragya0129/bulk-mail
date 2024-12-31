@@ -12,6 +12,7 @@ import {
 const ViewDetails = () => {
   const { state } = useLocation();
   const { subject, body, logo, attachments, recipients, footer } = state || {};
+  console.log(state);
 
   return (
     <Container maxWidth="sm" style={{ marginTop: "2rem" }}>

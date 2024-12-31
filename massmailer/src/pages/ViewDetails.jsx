@@ -9,7 +9,9 @@ import {
   colors,
 } from "@mui/material";
 import NavigationBar from "../components/NavigationBar";
+import HomeIcon from "@mui/icons-material/Home";
 import { useNavigate } from "react-router-dom";
+import Home from "./Home";
 
 const ViewDetails = () => {
   const { state } = useLocation();
@@ -40,13 +42,14 @@ const ViewDetails = () => {
           <Button
             variant="contained"
             color="primary"
+            startIcon={<HomeIcon />}
             onClick={handleHomeClick}
             style={{ textTransform: "none" }}
           >
-            Home
+            Dashboard
           </Button>
         </Box>
-        <Typography variant="h6" sx={{ color: "teal", marginTop: "1rem" }}>
+        <Typography variant="body1" sx={{ color: "black", marginTop: "1rem" }}>
           Date: {sentAt}
         </Typography>
 

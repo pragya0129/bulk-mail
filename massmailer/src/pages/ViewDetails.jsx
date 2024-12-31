@@ -9,6 +9,7 @@ import {
   colors,
 } from "@mui/material";
 import NavigationBar from "../components/NavigationBar";
+import { useNavigate } from "react-router-dom";
 
 const ViewDetails = () => {
   const { state } = useLocation();
@@ -16,9 +17,14 @@ const ViewDetails = () => {
     state || {};
   console.log(state);
 
+  const navigate = useNavigate();
+
+  const handleHomeClick = () => {
+    navigate("/dashboard"); // Replace with your actual dashboard route
+  };
+
   return (
     <Container maxWidth="sm" style={{ marginTop: "2rem" }}>
-      <NavigationBar />
       <Paper
         elevation={3}
         style={{
@@ -27,10 +33,20 @@ const ViewDetails = () => {
           backgroundColor: "#f9f9f9",
         }}
       >
-        <Typography variant="h5" sx={{ color: "teal" }}>
-          Mail Details
-        </Typography>
-        <Typography variant="h6" sx={{ color: "teal" }}>
+        <Box display="flex" alignItems="center" justifyContent="space-between">
+          <Typography variant="h5" sx={{ color: "teal" }}>
+            Mail Details
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleHomeClick}
+            style={{ textTransform: "none" }}
+          >
+            Home
+          </Button>
+        </Box>
+        <Typography variant="h6" sx={{ color: "teal", marginTop: "1rem" }}>
           Date: {sentAt}
         </Typography>
 
@@ -81,7 +97,7 @@ const ViewDetails = () => {
             </span>
             <br></br>
             {logo ? (
-              <img src="https://placehold.co/100?text=Your+Logo" alt="Logo" />
+              <img src="https://placehold.co/80?text=Your+Logo" alt="Logo" />
             ) : (
               <></>
             )}

@@ -8,6 +8,7 @@ import {
   Button,
   colors,
 } from "@mui/material";
+import NavigationBar from "../components/NavigationBar";
 
 const ViewDetails = () => {
   const { state } = useLocation();
@@ -17,6 +18,7 @@ const ViewDetails = () => {
 
   return (
     <Container maxWidth="sm" style={{ marginTop: "2rem" }}>
+      <NavigationBar />
       <Paper
         elevation={3}
         style={{
@@ -134,64 +136,6 @@ const ViewDetails = () => {
               </Box>
             )}
           </Typography>
-
-          {logo !== null ? (
-            <Box style={{ marginTop: "1rem", color: "#CC564D" }}>
-              <Typography
-                variant="h6"
-                sx={{
-                  border: "1px solid rgb(152, 152, 152)", // Border color
-                  borderRadius: "4px", // Rounded corners
-                  padding: "4px 8px",
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: "10px", // Smaller font size
-                    backgroundColor: "#b3e0dc", // Light teal background
-                    padding: "2px 4px", // Padding inside the background
-                    borderRadius: "2px", // Rounded corners for the background
-                    color: "black", // Text color for contrast
-                  }}
-                >
-                  Logo
-                </span>
-                <img
-                  src="/check.png" // Use the URL passed from the dashboard
-                  alt="Logo"
-                  style={{ maxWidth: "20px", maxHeight: "20px" }}
-                />
-              </Typography>
-            </Box>
-          ) : (
-            <Box style={{ marginTop: "1rem", color: "#CC564D" }}>
-              <Typography
-                variant="h6"
-                sx={{
-                  border: "1px solid rgb(152, 152, 152)", // Border color
-                  borderRadius: "4px", // Rounded corners
-                  padding: "4px 8px",
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: "10px", // Smaller font size
-                    backgroundColor: "#b3e0dc", // Light teal background
-                    padding: "2px 4px", // Padding inside the background
-                    borderRadius: "2px", // Rounded corners for the background
-                    color: "black", // Text color for contrast
-                  }}
-                >
-                  Logo
-                </span>
-                <img
-                  src="/delete.png" // Fallback image if logo is not available
-                  alt="Default Logo"
-                  style={{ maxWidth: "20px", maxHeight: "20px" }}
-                />
-              </Typography>
-            </Box>
-          )}
 
           {/* Show Attachments if present */}
           {attachments && attachments.length > 0 && (

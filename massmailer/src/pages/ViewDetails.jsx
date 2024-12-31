@@ -57,10 +57,10 @@ const ViewDetails = () => {
           </Typography>
 
           <Typography
-            variant="h6"
+            variant="body1"
             style={{
               marginTop: "1rem",
-              color: "#CC564D",
+              color: "black",
               border: "1px solid rgb(152, 152, 152)", // Border color
               borderRadius: "4px", // Rounded corners
               padding: "4px 8px",
@@ -82,17 +82,25 @@ const ViewDetails = () => {
             {/* Footer */}
             {footer && (
               <Box style={{ marginTop: "1rem" }}>
-                <Typography variant="h6" sx={{ color: "#CC564D" }}>
-                  Footer:
+                <Typography
+                  style={{
+                    fontSize: "10px", // Smaller font size
+                    backgroundColor: "#b3e0dc", // Light teal background
+                    padding: "2px 4px", // Padding inside the background
+                    borderRadius: "2px", // Rounded corners for the background
+                    color: "black", // Text color for contrast
+                  }}
+                >
+                  Footer
                 </Typography>
                 <Typography variant="body1">
-                  <strong>Name:</strong> {footer.name || "N/A"}
+                  {footer.name || "N/A"}
                 </Typography>
                 <Typography variant="body1">
-                  <strong>Designation:</strong> {footer.designation || "N/A"}
+                  {footer.designation || "N/A"}
                 </Typography>
                 <Typography variant="body1">
-                  <strong>Contact:</strong> {footer.contact || "N/A"}
+                  {footer.contact || "N/A"}
                 </Typography>
               </Box>
             )}

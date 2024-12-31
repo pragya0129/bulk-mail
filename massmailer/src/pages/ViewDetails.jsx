@@ -82,7 +82,7 @@ const ViewDetails = () => {
             {/* Footer */}
             {footer && (
               <Box style={{ marginTop: "1rem" }}>
-                <Typography
+                <span
                   style={{
                     fontSize: "10px", // Smaller font size
                     backgroundColor: "#b3e0dc", // Light teal background
@@ -92,10 +92,9 @@ const ViewDetails = () => {
                   }}
                 >
                   Footer
-                </Typography>
-                <Typography variant="body1">
-                  {footer.name || "N/A"}
-                </Typography>
+                </span>
+                <br></br>
+                <Typography variant="body1">{footer.name || "N/A"}</Typography>
                 <Typography variant="body1">
                   {footer.designation || "N/A"}
                 </Typography>

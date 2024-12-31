@@ -11,7 +11,8 @@ import {
 
 const ViewDetails = () => {
   const { state } = useLocation();
-  const { subject, body, logo, attachments, recipients, footer } = state || {};
+  const { subject, body, logo, attachments, recipients, footer, sentAt } =
+    state || {};
   console.log(state);
 
   return (
@@ -27,6 +28,10 @@ const ViewDetails = () => {
         <Typography variant="h5" sx={{ color: "teal" }}>
           Mail Details
         </Typography>
+        <Typography variant="h6" sx={{ color: "teal", justify }}>
+          Date: {sentAt}
+        </Typography>
+
         <Box style={{ marginTop: "1rem" }}>
           <Typography variant="h6" sx={{ color: "#CC564D" }}>
             Subject:

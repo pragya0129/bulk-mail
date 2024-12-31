@@ -186,7 +186,7 @@ const Dashboard = () => {
                           {mail.subject}
                         </Typography>
                       }
-                      secondary={formattedDate}
+                      secondary={mail.sentAt}
                     />
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       <Button

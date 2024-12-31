@@ -188,14 +188,15 @@ const ViewDetails = () => {
 
           {/* Show Attachments if present */}
           {attachments && attachments.length > 0 && (
-            <Box style={{ marginTop: "1rem" }}>
-              <Typography
-                sx={{
-                  border: "1px solid rgb(152, 152, 152)", // Border color
-                  borderRadius: "4px", // Rounded corners
-                  padding: "4px 8px",
-                }}
-              >
+            <Box
+              style={{ marginTop: "1rem" }}
+              sx={{
+                border: "1px solid rgb(152, 152, 152)", // Border color
+                borderRadius: "4px", // Rounded corners
+                padding: "4px 8px",
+              }}
+            >
+              <Typography>
                 <span
                   style={{
                     fontSize: "10px", // Smaller font size

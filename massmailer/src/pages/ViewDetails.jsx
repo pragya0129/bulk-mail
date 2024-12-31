@@ -11,7 +11,7 @@ import {
 
 const ViewDetails = () => {
   const { state } = useLocation();
-  const { subject, body, logo, attachments, recipients } = state || {};
+  const { subject, body, logo, attachments, recipients, footer } = state || {};
 
   return (
     <Container maxWidth="sm" style={{ marginTop: "2rem" }}>
@@ -39,6 +39,24 @@ const ViewDetails = () => {
             Body:
           </Typography>
           <Typography variant="body1">{body}</Typography>
+
+          {/* Footer */}
+          {footer && (
+            <Box style={{ marginTop: "1rem" }}>
+              <Typography variant="h6" sx={{ color: "#CC564D" }}>
+                Footer:
+              </Typography>
+              <Typography variant="body1">
+                <strong>Name:</strong> {footer.name || "N/A"}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Designation:</strong> {footer.designation || "N/A"}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Contact:</strong> {footer.contact || "N/A"}
+              </Typography>
+            </Box>
+          )}
 
           {logo !== null ? (
             <Box style={{ marginTop: "1rem", color: "#CC564D" }}>

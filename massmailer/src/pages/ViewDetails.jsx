@@ -28,7 +28,7 @@ const ViewDetails = () => {
         <Typography variant="h5" sx={{ color: "teal" }}>
           Mail Details
         </Typography>
-        <Typography variant="h6" sx={{ color: "teal", justify }}>
+        <Typography variant="h6" sx={{ color: "teal" }}>
           Date: {sentAt}
         </Typography>
 

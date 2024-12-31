@@ -163,18 +163,32 @@ const Dashboard = () => {
                     style={{
                       display: "flex",
                       justifyContent: "space-between",
+                      alignItems: "center", // Ensure items are vertically aligned
                     }}
                   >
                     <ListItemAvatar>
                       <Avatar sx={{ bgcolor: "teal" }}>
-                        <EmailIcon color="" />
+                        <EmailIcon />
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                      primary={mail.subject}
-                      secondary={mail.sentAt}
+                      primary={
+                        <Typography
+                          variant="body1"
+                          noWrap
+                          sx={{
+                            maxWidth: { xs: "150px", md: "300px" }, // Adjust width based on screen size
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {mail.subject}
+                        </Typography>
+                      }
+                      secondary={formattedDate}
                     />
-                    <Box>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       <Button
                         variant="outlined"
                         aria-label="view-details"

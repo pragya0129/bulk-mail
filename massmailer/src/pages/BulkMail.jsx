@@ -1,3 +1,5 @@
+bulkmail.jsx;
+
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -13,11 +15,11 @@ import { jwtDecode } from "jwt-decode";
 const BulkMail = () => {
   const [excelFile, setExcelFile] = useState(null);
   const [uploadMessage, setUploadMessage] = useState("");
-  const [footer, setFooter] = useState(""); // New state for footer
-  const { state } = useLocation();
-  const { subject, body, logo, attachments } = state || {};
+  const { state } = useLocation(); // Access mail details from state
+  const { subject, body, logo, attachments, footer } = state || {};
   const navigate = useNavigate();
 
+  // Handle Excel file upload
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -26,6 +28,7 @@ const BulkMail = () => {
     }
   };
 
+  // Handle sending bulk mail
   const handleSendBulkMail = async () => {
     if (!excelFile) {
       alert("Please upload an Excel file with email addresses.");
@@ -37,7 +40,8 @@ const BulkMail = () => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        userID = decodedToken.userId;
+        userID = decodedToken.userId; // Get `name` directly from the token
+        console.log("Decoded Token:", decodedToken); // Debugging
       } catch (error) {
         console.error("Error decoding token:", error);
       }
@@ -46,11 +50,11 @@ const BulkMail = () => {
     const formData = new FormData();
     formData.append("subject", subject);
     formData.append("body", body);
-    formData.append("footer", footer); // Add footer to form data
     if (logo) formData.append("logo", logo);
     attachments.forEach((file) => formData.append("attachments", file));
     formData.append("excelFile", excelFile);
     formData.append("userId", userID);
+    formData.append("footer", footer);
 
     try {
       const response = await fetch(
@@ -83,6 +87,8 @@ const BulkMail = () => {
           Upload an Excel file containing the list of email addresses to send
           the mail to.
         </Typography>
+
+        {/* File Upload */}
         <Input
           type="file"
           onChange={handleFileChange}
@@ -95,13 +101,8 @@ const BulkMail = () => {
             {uploadMessage}
           </Alert>
         )}
-        <Input
-          placeholder="Enter footer"
-          value={footer}
-          onChange={(e) => setFooter(e.target.value)} // Input for footer
-          fullWidth
-          style={{ marginTop: "1rem" }}
-        />
+
+        {/* Send Bulk Mail Button */}
         <Button
           variant="contained"
           color="primary"

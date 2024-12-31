@@ -34,16 +34,26 @@ const ViewDetails = () => {
 
         <Box style={{ marginTop: "1rem" }}>
           <Typography
-            variant="h6"
+            variant="body1"
             sx={{
               color: "#CC564D",
-              border: "1px solid rgb(152, 152, 152)", // Border color matching the text color
-              borderRadius: "4px", // Optional: Add rounded corners
-              padding: "4px 8px", // Optional: Add some padding inside the border
-              display: "inline-block", // Ensures the border wraps tightly around the text
+              border: "1px solid rgb(152, 152, 152)", // Border color
+              borderRadius: "4px", // Rounded corners
+              padding: "4px 8px", // Padding inside the border
             }}
           >
-            Subject: {subject}
+            <span
+              style={{
+                fontSize: "10px", // Smaller font size
+                backgroundColor: "#b3e0dc", // Light teal background
+                padding: "2px 4px", // Padding inside the background
+                borderRadius: "2px", // Rounded corners for the background
+                color: "white", // Text color for contrast
+              }}
+            >
+              Subject:
+            </span>{" "}
+            {subject}
           </Typography>
 
           <Typography

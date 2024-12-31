@@ -101,6 +101,7 @@ const Dashboard = () => {
           attachments: selectedMail.attachments,
           recipients: selectedMail.recipients,
           sentAt: selectedMail.sentAt,
+          footer: selectedMail.footer,
         },
       });
     } else {

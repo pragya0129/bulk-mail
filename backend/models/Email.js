@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const emailSchema = new mongoose.Schema({
   subject: { type: String, required: true },
   body: { type: String, required: true },
+  footer: { type: String },
   logo: { type: Buffer }, // Store logo as base64 or CID reference
   attachments: [{ type: String }], // List of attachment file paths or base64 data
   recipients: [{ type: String }], // List of email addresses

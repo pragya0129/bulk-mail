@@ -92,7 +92,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Bulk Mail Route
 app.post(
   "/send-bulk-mail",
   upload.fields([
@@ -102,7 +101,7 @@ app.post(
   ]),
   async (req, res) => {
     try {
-      const { userId, subject, body } = req.body;
+      const { userId, subject, body, footer } = req.body; // Extract footer
       const excelFileBuffer = req.files.excelFile?.[0]?.buffer;
       const logoBuffer = req.files.logo?.[0]?.buffer;
       const attachments = req.files.attachments || [];
@@ -147,6 +146,8 @@ app.post(
                     : ""
                 }
                 <p>${body}</p>
+                <hr />
+                <p>${footer}</p> <!-- Add footer to email -->
               </body>
             </html>
           `,
@@ -161,6 +162,7 @@ app.post(
       const newEmail = new Email({
         subject,
         body,
+        footer, // Save footer in the database
         logo: logoBuffer ? "In-Memory Logo" : null,
         attachments: attachments.map((file) => file.originalname),
         recipients: emailAddresses,

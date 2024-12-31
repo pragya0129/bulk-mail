@@ -52,6 +52,7 @@ const BulkMail = () => {
     attachments.forEach((file) => formData.append("attachments", file));
     formData.append("excelFile", excelFile);
     formData.append("userId", userID);
+    console.log("Footer being sent:", footer);
     formData.append("footer", JSON.stringify(footer));
 
     try {

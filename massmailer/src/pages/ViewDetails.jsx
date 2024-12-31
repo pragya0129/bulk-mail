@@ -82,23 +82,46 @@ const ViewDetails = () => {
             {/* Footer */}
             {footer && (
               <Box style={{ marginTop: "1rem" }}>
-                <span
-                  style={{
-                    fontSize: "10px", // Smaller font size
-                    backgroundColor: "#b3e0dc", // Light teal background
-                    padding: "2px 4px", // Padding inside the background
-                    borderRadius: "2px", // Rounded corners for the background
-                    color: "black", // Text color for contrast
-                  }}
-                >
-                  Footer
-                </span>
-                <br></br>
-                <Typography variant="body1">{footer.name || "N/A"}</Typography>
                 <Typography variant="body1">
+                  <span
+                    style={{
+                      fontSize: "10px", // Smaller font size
+                      backgroundColor: "#b3e0dc", // Light teal background
+                      padding: "2px 4px", // Padding inside the background
+                      borderRadius: "2px", // Rounded corners for the background
+                      color: "black", // Text color for contrast
+                    }}
+                  >
+                    Name
+                  </span>
+                  {footer.name || "N/A"}
+                </Typography>
+                <Typography variant="body1">
+                  <span
+                    style={{
+                      fontSize: "10px", // Smaller font size
+                      backgroundColor: "#b3e0dc", // Light teal background
+                      padding: "2px 4px", // Padding inside the background
+                      borderRadius: "2px", // Rounded corners for the background
+                      color: "black", // Text color for contrast
+                    }}
+                  >
+                    Designation
+                  </span>
                   {footer.designation || "N/A"}
                 </Typography>
                 <Typography variant="body1">
+                  <span
+                    style={{
+                      fontSize: "10px", // Smaller font size
+                      backgroundColor: "#b3e0dc", // Light teal background
+                      padding: "2px 4px", // Padding inside the background
+                      borderRadius: "2px", // Rounded corners for the background
+                      color: "black", // Text color for contrast
+                    }}
+                  >
+                    Contact
+                  </span>
                   {footer.contact || "N/A"}
                 </Typography>
               </Box>

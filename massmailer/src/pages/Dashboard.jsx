@@ -11,6 +11,7 @@ import {
   ListItem,
   ListItemText,
   IconButton,
+  Divider,
   Grid,
   Paper,
   Box,
@@ -191,6 +192,7 @@ const Dashboard = () => {
                     </Box>
                   </ListItem>
                 );
+                <Divider />;
               })}
             </List>
           </Paper>

@@ -78,7 +78,7 @@ const ViewDetails = () => {
               Body
             </span>{" "}
             {body}
-            <br></br>
+            <hr></hr>
             {/* Footer */}
             {footer && (
               <Box style={{ marginTop: "1rem" }}>
@@ -223,14 +223,18 @@ const ViewDetails = () => {
 
           {/* Show Recipients */}
           {recipients && recipients.length > 0 && (
-            <Box style={{ marginTop: "1rem" }}>
+            <Box
+              style={{ marginTop: "1rem" }}
+              sx={{
+                border: "1px solid rgb(152, 152, 152)", // Border color
+                borderRadius: "4px", // Rounded corners
+                padding: "4px 8px",
+              }}
+            >
               <Typography
                 variant="h6"
                 sx={{
                   color: "#CC564D",
-                  border: "1px solid rgb(152, 152, 152)", // Border color
-                  borderRadius: "4px", // Rounded corners
-                  padding: "4px 8px",
                 }}
               >
                 <span

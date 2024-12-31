@@ -76,12 +76,14 @@ const ViewDetails = () => {
               }}
             >
               Body
-            </span>{" "}
+            </span>
+            <br></br>
             {logo ? (
               <img src="https://placehold.co/100?text=Your+Logo" alt="Logo" />
             ) : (
               <></>
             )}
+            <br></br>
             {body}
             <hr></hr>
             {/* Footer */}

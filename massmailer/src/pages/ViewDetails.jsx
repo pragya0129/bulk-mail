@@ -93,7 +93,7 @@ const ViewDetails = () => {
                     }}
                   >
                     Name
-                  </span>
+                  </span>{" "}
                   {footer.name || "N/A"}
                 </Typography>
                 <Typography variant="body1">
@@ -107,7 +107,7 @@ const ViewDetails = () => {
                     }}
                   >
                     Designation
-                  </span>
+                  </span>{" "}
                   {footer.designation || "N/A"}
                 </Typography>
                 <Typography variant="body1">
@@ -121,7 +121,7 @@ const ViewDetails = () => {
                     }}
                   >
                     Contact
-                  </span>
+                  </span>{" "}
                   {footer.contact || "N/A"}
                 </Typography>
               </Box>
@@ -142,7 +142,17 @@ const ViewDetails = () => {
           ) : (
             <Box style={{ marginTop: "1rem", color: "#CC564D" }}>
               <Typography variant="h6">
-                Logo{" "}
+                <span
+                  style={{
+                    fontSize: "10px", // Smaller font size
+                    backgroundColor: "#b3e0dc", // Light teal background
+                    padding: "2px 4px", // Padding inside the background
+                    borderRadius: "2px", // Rounded corners for the background
+                    color: "black", // Text color for contrast
+                  }}
+                >
+                  Logo
+                </span>
                 <img
                   src="/delete.png" // Fallback image if logo is not available
                   alt="Default Logo"
@@ -155,8 +165,18 @@ const ViewDetails = () => {
           {/* Show Attachments if present */}
           {attachments && attachments.length > 0 && (
             <Box style={{ marginTop: "1rem" }}>
-              <Typography variant="h6" sx={{ color: "#CC564D" }}>
-                Attachments:
+              <Typography>
+                <span
+                  style={{
+                    fontSize: "10px", // Smaller font size
+                    backgroundColor: "#b3e0dc", // Light teal background
+                    padding: "2px 4px", // Padding inside the background
+                    borderRadius: "2px", // Rounded corners for the background
+                    color: "black", // Text color for contrast
+                  }}
+                >
+                  Attachments
+                </span>
               </Typography>
               <ul>
                 {attachments.map((attachment, index) => (
@@ -174,7 +194,17 @@ const ViewDetails = () => {
           {recipients && recipients.length > 0 && (
             <Box style={{ marginTop: "1rem" }}>
               <Typography variant="h6" sx={{ color: "#CC564D" }}>
-                Recipients:
+                <span
+                  style={{
+                    fontSize: "10px", // Smaller font size
+                    backgroundColor: "#b3e0dc", // Light teal background
+                    padding: "2px 4px", // Padding inside the background
+                    borderRadius: "2px", // Rounded corners for the background
+                    color: "black", // Text color for contrast
+                  }}
+                >
+                  Recipients
+                </span>
               </Typography>
               <ul>
                 {recipients.map((recipient, index) => (

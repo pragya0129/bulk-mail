@@ -190,7 +190,6 @@ const Dashboard = () => {
                         <DeleteIcon sx={{ color: "#FF6F61" }} />
                       </IconButton>
                     </Box>
-                    <Divider />;
                   </ListItem>
                 );
               })}

@@ -4,24 +4,21 @@ import { Container, Typography, Box, Paper, Button } from "@mui/material";
 
 const PreviewMail = () => {
   const { state } = useLocation();
-  const { subject, body, logo, attachments } = state || {};
+  const { subject, body, logo, attachments, footer } = state || {};
   const navigate = useNavigate();
 
-  // Navigate back to EditMail page to edit details
-  // PreviewMail.jsx
-  // PreviewMail.jsx
   const handleEdit = () => {
     navigate("/edit-mail", {
       state: {
         subject,
         body,
-        logo, // Pass the logo file itself
-        attachments, // Pass the attachments files themselves
+        logo,
+        attachments,
+        footer,
       },
     });
   };
 
-  // Handle "Next" (for example, to send the email or proceed to the next step)
   const handleNext = () => {
     navigate("/bulk-mail", {
       state: {
@@ -29,6 +26,7 @@ const PreviewMail = () => {
         body,
         logo,
         attachments,
+        footer,
       },
     });
   };
@@ -68,6 +66,18 @@ const PreviewMail = () => {
                 </li>
               ))}
             </ul>
+          </Box>
+        )}
+
+        {/* Footer Preview */}
+        {footer && (
+          <Box style={{ marginTop: "1rem" }}>
+            <Typography variant="h6">Footer:</Typography>
+            <Typography variant="body1">Name: {footer.name}</Typography>
+            <Typography variant="body1">
+              Designation: {footer.designation}
+            </Typography>
+            <Typography variant="body1">Contact: {footer.contact}</Typography>
           </Box>
         )}
 

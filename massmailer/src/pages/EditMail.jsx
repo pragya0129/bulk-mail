@@ -1,4 +1,3 @@
-// EditMail.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -17,6 +16,11 @@ const EditMail = () => {
     body: "",
     logo: null,
     attachments: [],
+    footer: {
+      name: "",
+      designation: "",
+      contact: "",
+    },
   });
   const navigate = useNavigate();
   const location = useLocation();
@@ -24,18 +28,27 @@ const EditMail = () => {
   // If state is passed from PreviewMail, use it to populate form
   useEffect(() => {
     if (location.state) {
-      const { subject, body, logo, attachments } = location.state;
+      const { subject, body, logo, attachments, footer } = location.state;
       setMailData({
         subject,
         body,
         logo,
         attachments,
+        footer: footer || { name: "", designation: "", contact: "" },
       });
     }
   }, [location.state]);
 
   const handleChange = (e) => {
-    setMailData({ ...mailData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name in mailData.footer) {
+      setMailData({
+        ...mailData,
+        footer: { ...mailData.footer, [name]: value },
+      });
+    } else {
+      setMailData({ ...mailData, [name]: value });
+    }
   };
 
   const handleFileChange = (e) => {
@@ -47,24 +60,14 @@ const EditMail = () => {
     }
   };
 
-  const handleSave = async () => {
-    const token = localStorage.getItem("authToken");
-    if (!token) return alert("Please login first.");
-
-    const formData = new FormData();
-    formData.append("subject", mailData.subject);
-    formData.append("body", mailData.body);
-    if (mailData.logo) formData.append("logo", mailData.logo);
-    mailData.attachments.forEach((file) =>
-      formData.append("attachments", file)
-    );
-
+  const handleSave = () => {
     navigate("/preview", {
       state: {
         subject: mailData.subject,
         body: mailData.body,
         logo: mailData.logo,
         attachments: mailData.attachments,
+        footer: mailData.footer,
       },
     });
   };
@@ -148,6 +151,34 @@ const EditMail = () => {
               </ul>
             </Box>
           )}
+          {/* Footer Section */}
+          <Typography variant="h6" style={{ marginTop: "1rem" }}>
+            Footer Details:
+          </Typography>
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Name"
+            name="name"
+            value={mailData.footer.name}
+            onChange={handleChange}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Designation"
+            name="designation"
+            value={mailData.footer.designation}
+            onChange={handleChange}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Contact Number"
+            name="contact"
+            value={mailData.footer.contact}
+            onChange={handleChange}
+          />
           <Button
             variant="contained"
             color="primary"

@@ -48,39 +48,55 @@ const ViewDetails = () => {
                 backgroundColor: "#b3e0dc", // Light teal background
                 padding: "2px 4px", // Padding inside the background
                 borderRadius: "2px", // Rounded corners for the background
-                color: "white", // Text color for contrast
+                color: "black", // Text color for contrast
               }}
             >
-              Subject:
+              Subject
             </span>{" "}
             {subject}
           </Typography>
 
           <Typography
             variant="h6"
-            style={{ marginTop: "1rem", color: "#CC564D" }}
+            style={{
+              marginTop: "1rem",
+              color: "#CC564D",
+              border: "1px solid rgb(152, 152, 152)", // Border color
+              borderRadius: "4px", // Rounded corners
+              padding: "4px 8px",
+            }}
           >
-            Body:
+            <span
+              style={{
+                fontSize: "10px", // Smaller font size
+                backgroundColor: "#b3e0dc", // Light teal background
+                padding: "2px 4px", // Padding inside the background
+                borderRadius: "2px", // Rounded corners for the background
+                color: "black", // Text color for contrast
+              }}
+            >
+              Body
+            </span>{" "}
+            {body}
+            <br></br>
+            {/* Footer */}
+            {footer && (
+              <Box style={{ marginTop: "1rem" }}>
+                <Typography variant="h6" sx={{ color: "#CC564D" }}>
+                  Footer:
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Name:</strong> {footer.name || "N/A"}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Designation:</strong> {footer.designation || "N/A"}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Contact:</strong> {footer.contact || "N/A"}
+                </Typography>
+              </Box>
+            )}
           </Typography>
-          <Typography variant="body1">{body}</Typography>
-
-          {/* Footer */}
-          {footer && (
-            <Box style={{ marginTop: "1rem" }}>
-              <Typography variant="h6" sx={{ color: "#CC564D" }}>
-                Footer:
-              </Typography>
-              <Typography variant="body1">
-                <strong>Name:</strong> {footer.name || "N/A"}
-              </Typography>
-              <Typography variant="body1">
-                <strong>Designation:</strong> {footer.designation || "N/A"}
-              </Typography>
-              <Typography variant="body1">
-                <strong>Contact:</strong> {footer.contact || "N/A"}
-              </Typography>
-            </Box>
-          )}
 
           {logo !== null ? (
             <Box style={{ marginTop: "1rem", color: "#CC564D" }}>

@@ -130,8 +130,25 @@ const ViewDetails = () => {
 
           {logo !== null ? (
             <Box style={{ marginTop: "1rem", color: "#CC564D" }}>
-              <Typography variant="h6">
-                Logo{" "}
+              <Typography
+                variant="h6"
+                sx={{
+                  border: "1px solid rgb(152, 152, 152)", // Border color
+                  borderRadius: "4px", // Rounded corners
+                  padding: "4px 8px",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "10px", // Smaller font size
+                    backgroundColor: "#b3e0dc", // Light teal background
+                    padding: "2px 4px", // Padding inside the background
+                    borderRadius: "2px", // Rounded corners for the background
+                    color: "black", // Text color for contrast
+                  }}
+                >
+                  Logo
+                </span>
                 <img
                   src="/check.png" // Use the URL passed from the dashboard
                   alt="Logo"
